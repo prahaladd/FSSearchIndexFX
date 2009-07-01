@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="KMPAlgorithm">
+</Property><Property Name="Solution File" Value="C:\Projects\codeplex\FindFilesUtil\Trunk\src\KMPAlgorithm.sln">
+</Property><Property Name="Date" Value="Wednesday, June 17, 2009">
+</Property><Property Name="Time" Value="0:44:28 AM">
+</Property></Properties><Event ErrorLevel="0" Project="KMPAlgorithm" Source="KMPAlgorithm.csproj" Description="Project file successfully backed up as C:\Projects\codeplex\FindFilesUtil\Trunk\src\Backup\KMPAlgorithm.csproj">
+</Event><Event ErrorLevel="0" Project="KMPAlgorithm" Source="DirectoryTreeWalker.cs" Description="File successfully backed up as C:\Projects\codeplex\FindFilesUtil\Trunk\src\Backup\DirectoryTreeWalker.cs">
+</Event><Event ErrorLevel="0" Project="KMPAlgorithm" Source="FileContentFinder.cs" Description="File successfully backed up as C:\Projects\codeplex\FindFilesUtil\Trunk\src\Backup\FileContentFinder.cs">
+</Event><Event ErrorLevel="0" Project="KMPAlgorithm" Source="KMPEngine.cs" Description="File successfully backed up as C:\Projects\codeplex\FindFilesUtil\Trunk\src\Backup\KMPEngine.cs">
+</Event><Event ErrorLevel="0" Project="KMPAlgorithm" Source="Properties\AssemblyInfo.cs" Description="File successfully backed up as C:\Projects\codeplex\FindFilesUtil\Trunk\src\Backup\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="2" Project="KMPAlgorithm" Source="Taurus.FindFiles.key.pfx" Description="Failed to backup file as C:\Projects\codeplex\FindFilesUtil\Trunk\src\Backup\Taurus.FindFiles.key.pfx">
+</Event><Event ErrorLevel="0" Project="KMPAlgorithm" Source="KMPAlgorithm.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="KMPAlgorithm" Source="KMPAlgorithm.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="KMPAlgorithm" Source="KMPAlgorithm.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

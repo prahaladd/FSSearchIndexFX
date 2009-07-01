@@ -1,0 +1,5 @@
+C:\Projects\codeplex\FindFilesUtil\Trunk\src\bin\Debug\Taurus.FindFiles.dll
+C:\Projects\codeplex\FindFilesUtil\Trunk\src\bin\Debug\Taurus.FindFiles.pdb
+C:\Projects\codeplex\FindFilesUtil\Trunk\src\obj\Debug\ResolveAssemblyReference.cache
+C:\Projects\codeplex\FindFilesUtil\Trunk\src\obj\Debug\Taurus.FindFiles.dll
+C:\Projects\codeplex\FindFilesUtil\Trunk\src\obj\Debug\Taurus.FindFiles.pdb

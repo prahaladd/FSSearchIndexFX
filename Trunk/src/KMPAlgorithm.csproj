@@ -1,8 +1,8 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{FD3974D8-E25E-4F33-9CB2-86096E889B41}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -12,7 +12,13 @@
     <StartupObject>
     </StartupObject>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>Taurus.FindFiles.key.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,16 +40,22 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DirectoryTreeWalker.cs" />
-    <Compile Include="FileContentFinder.cs" />
-    <Compile Include="KMPEngine.cs" />
+    <Compile Include="Engines\FileSearchEngine.cs" />
+    <Compile Include="Engines\IndexingEngine.cs" />
+    <Compile Include="IndexInfra\IndexDatabase.cs" />
+    <Compile Include="IndexInfra\IndexDatabaseReader.cs" />
+    <Compile Include="IndexInfra\IndexDatabaseWriter.cs" />
+    <Compile Include="IndexInfra\IndexRecord.cs" />
+    <Compile Include="SearchInfra\DirectoryTreeWalker.cs" />
+    <Compile Include="SearchInfra\FileContentFinder.cs" />
+    <Compile Include="SearchInfra\KMPEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Taurus.FindFiles.key.pfx" />
+    <Compile Include="Utils\Utilities.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -17,8 +17,9 @@ namespace Taurus.FindFiles.Engines
 
         #region Public methods
 
+        
         public void Index()
-       { 
+        { 
            //get the number of logical drives on the system.
 
             string[] logicalDrives = System.Environment.GetLogicalDrives();
@@ -32,8 +33,10 @@ namespace Taurus.FindFiles.Engines
             {
 
                 _directoryTreeWalker = new DirectoryTreeWalker();
-                _directoryTreeWalker.EnumerateFiles(logicalDrive);
+                
                 _directoryTreeWalker.SearchSubDirectories = true;
+
+                _directoryTreeWalker.WalkTheTree(logicalDrive);
 
                 List<string> files = _directoryTreeWalker.Files;
 
@@ -51,21 +54,13 @@ namespace Taurus.FindFiles.Engines
         #endregion
 
 
+        
+
         #region Private methods
 
         private void IndexInternal(List<string> files)
         {
             files.Sort(StringComparer.OrdinalIgnoreCase);
-
-
-
-            if (File.Exists(@"C:\searchlog.txt"))
-            {
-                File.Delete(@"C:\searchLog.txt");
-            }
-
-            TextWriter logWriter = new StreamWriter(File.Open(@"C:\searchLog.txt", FileMode.Append | FileMode.OpenOrCreate, FileAccess.Write));
-
 
             try
             {
@@ -75,11 +70,18 @@ namespace Taurus.FindFiles.Engines
                 for (int i = 0; i < files.Count; i++)
                 {
 
+                    //skip the file used for logging
+                    if (0 == string.Compare(files[i], LogWriter.LogFileName, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    
+
+
                     if (!Utilities.IsTextFile(files[i]))
                         continue;
 
                     //read the text in the text file
-                    fileText = Utilities.ReadTextFiles(files[i]);
+                    fileText = Utilities.ReadTextFromFiles(files[i]);
 
                     //we are not going to filter out any words as of the current release
                     //this may result in large search times, but we are OK with it for now.
@@ -117,35 +119,34 @@ namespace Taurus.FindFiles.Engines
 
                             indexRecords.Add(indexRecord);
                             _indexDatabaseEntries.Add(word, indexRecords);
-                            logWriter.WriteLine("Created  first Index record for file {0} containing word {1}", files[i], word);
+                            LogWriter.WriteToLogFile(string.Format("Created  first Index record for file {0} containing word {1}", files[i], word));
 
                         }
                         else
                         {
                             _indexDatabaseEntries[word].Add(indexRecord);
-                            logWriter.WriteLine("Appended Index record for file {0} containing word {1}", files[i], word);
+                            LogWriter.WriteToLogFile(string.Format("Appended Index record for file {0} containing word {1}", files[i], word));
                         }
-                        logWriter.Flush();
+                        
 
                     }
 
                 }
 
-               logWriter.WriteLine("Created index database with {0} index entries", _indexDatabaseEntries.Count);
-                logWriter.Flush();
+               LogWriter.WriteToLogFile(string.Format("Created index database with {0} index entries", _indexDatabaseEntries.Count));
+               
                
                 
             }
             catch (Exception ex)
             {
-                logWriter.WriteLine("Exception ex:{0}", ex.ToString());
-                logWriter.Flush();
+                LogWriter.WriteToLogFile(string.Format("Exception ex:{0}", ex.ToString()));
+                
                 
             }
             finally
             {
-                logWriter.Flush();
-                logWriter.Close();
+                LogWriter.Dispose();
             }
         }
         
@@ -154,7 +155,24 @@ namespace Taurus.FindFiles.Engines
 
         #endregion
 
+        #region Private properties
 
+        private Logger LogWriter
+        {
+
+            get
+            {
+                if (null == _logger)
+                {
+
+                    _logger = new Logger();
+                }
+                return _logger;
+            }
+        }
+
+
+        #endregion
 
         #region Private members
 
@@ -167,8 +185,8 @@ namespace Taurus.FindFiles.Engines
         private IndexDatabase _indexDatabase;
 
         private Dictionary<string, List<IndexRecord>> _indexDatabaseEntries = new Dictionary<string, List<IndexRecord>>();
-        
 
+        private Logger _logger;
         #endregion
     }
 }

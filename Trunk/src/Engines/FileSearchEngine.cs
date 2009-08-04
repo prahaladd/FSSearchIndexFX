@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Collections.Generic;
 
 using Taurus.FindFiles.IndexInfra;
+using System.Collections;
 
 namespace Taurus.FindFiles.Engines
 {
@@ -27,15 +31,24 @@ namespace Taurus.FindFiles.Engines
 
         public Dictionary<string, List<int>> SearchFilesForPattern(string pattern,bool useIndex)
         {
-
+            
             if (!useIndex)
             {
                 _fileContentFinder = new FileContentFinder(_rootPath, pattern);
 
                 _fileContentFinder.SearchInFiles();
 
+                //could have used LINQ but my editor does not allow the syntax to be validated :(
+                Dictionary<string, List<int>> fileNamesToOccurencePositions = (from fileEntry in _fileContentFinder.FileNameToOccurencePositions
+                                                                               where fileEntry.Key.Contains(_rootPath)
+                                                                               select fileEntry).ToDictionary(fileEntry => fileEntry.Key, fileEntry => fileEntry.Value);
 
-                return _fileContentFinder.FileNameToOccurencePositions;
+
+
+                
+
+               // return _fileContentFinder.FileNameToOccurencePositions;
+                return fileNamesToOccurencePositions;
             }
             else
             {
@@ -64,7 +77,8 @@ namespace Taurus.FindFiles.Engines
 
                 foreach (IndexRecord record in indexRecords)
                 {
-                    fileNamesToOccurencePostions.Add(record.FileName, record.OccurencePositions);
+                    if( 0 == record.FileName.IndexOf(_rootPath))
+                        fileNamesToOccurencePostions.Add(record.FileName, record.OccurencePositions);
                 }
 
             }

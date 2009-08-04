@@ -37,7 +37,10 @@ namespace Taurus.FindFiles
 
             foreach (string file in directoryTreeWalker.Files)
             {
-                fileContent = Utilities.ReadTextFiles(file);
+                if (!Utilities.IsTextFile(file))
+                    continue;
+
+                fileContent = Utilities.ReadTextFromFiles(file);
 
                 KMPEngine kmpEngine = new KMPEngine(fileContent, SearchPattern);
 
@@ -70,7 +73,7 @@ namespace Taurus.FindFiles
                 if (!Utilities.IsTextFile(file))
                     continue;
 
-                string fileContent = Utilities.ReadTextFiles(file);
+                string fileContent = Utilities.ReadTextFromFiles(file);
 
                 KMPEngine kmpEngine = new KMPEngine(fileContent, SearchPattern);
 

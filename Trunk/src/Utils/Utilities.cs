@@ -2,23 +2,41 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using Taurus.DocReaders;
+using Taurus.DocReaders.Interfaces;
 
 namespace Taurus.FindFiles.Utils
 {
     internal class Utilities
     {
 
-        public static string ReadTextFiles(string fileName)
+        static Utilities()
+        {
+            _fileExtensionsToExclude.Add("dll");
+            _fileExtensionsToExclude.Add("exe");
+            _fileExtensionsToExclude.Add("sys");
+            _fileExtensionsToExclude.Add("com");
+            _fileExtensionsToExclude.Add("pdb");
+            _fileExtensionsToExclude.Add("dat");
+            _fileExtensionsToExclude.Add("bin");
+            _fileExtensionsToExclude.Add("class");
+            _fileExtensionsToExclude.Add("jar");
+
+
+        }
+
+        public static string ReadTextFromFiles(string fileName)
         {
             string fileText = string.Empty;
 
-            using (TextReader textReader = new StreamReader(File.Open(fileName, FileMode.Open, FileAccess.Read)))
-            {
+            IDocReader reader = DocReaderFactory.Make(fileName);
 
-                fileText = textReader.ReadToEnd();
+            reader.Initialize();
 
-                textReader.Close();
-            }
+            fileText = reader.ReadDocument();
+
+            reader.Close();
+
             return fileText;
         }
 
@@ -39,15 +57,20 @@ namespace Taurus.FindFiles.Utils
 
         public static bool IsTextFile(string fileName)
         {
-            if (fileName.LastIndexOf(".dll", StringComparison.OrdinalIgnoreCase) != -1 ||
-                fileName.LastIndexOf(".exe", StringComparison.OrdinalIgnoreCase) != -1 ||
-                fileName.LastIndexOf(".sys", StringComparison.OrdinalIgnoreCase) != -1||
-                fileName.LastIndexOf(".dat", StringComparison.OrdinalIgnoreCase) != -1 ||
-                fileName.LastIndexOf(".com", StringComparison.OrdinalIgnoreCase) != -1 ||
-                fileName.LastIndexOf(".") == -1)
-                return false;
+            //if (fileName.LastIndexOf(".dll", StringComparison.OrdinalIgnoreCase) != -1 ||
+            //    fileName.LastIndexOf(".exe", StringComparison.OrdinalIgnoreCase) != -1 ||
+            //    fileName.LastIndexOf(".sys", StringComparison.OrdinalIgnoreCase) != -1||
+            //    fileName.LastIndexOf(".dat", StringComparison.OrdinalIgnoreCase) != -1 ||
+            //    fileName.LastIndexOf(".com", StringComparison.OrdinalIgnoreCase) != -1 ||
+            //    fileName.LastIndexOf(".") == -1)
+            //    return false;
 
-            return true;
+            //return true;
+
+            string fileExtension = fileName.Substring(fileName.LastIndexOf(".") + 1);
+
+            return (!IsExtensionExcluded(fileExtension));
+           
         }
 
         //this function ensures that each word in the file is counted EXACTLY once. Hence 
@@ -81,6 +104,20 @@ namespace Taurus.FindFiles.Utils
             return uniqueWordList;
         }
 
+
+        private static bool IsExtensionExcluded(string inputExtension)
+        {
+            bool shouldExclude = (_fileExtensionsToExclude.Exists(delegate(string extension) 
+                                                    { return ( 0 == string.Compare(extension, inputExtension, 
+                                                        StringComparison.OrdinalIgnoreCase)); })) ? true : false;
+            return shouldExclude;
+        }
+
+        #region Private static members
+
+        private static List<string> _fileExtensionsToExclude = new List<string>();
+
+        #endregion
 
     }
 }

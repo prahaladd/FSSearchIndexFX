@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace Taurus.FindFiles
 {
@@ -38,18 +40,26 @@ namespace Taurus.FindFiles
             {
                 List<string> subDirectories = new List<string>();
 
-                string[] directoryNames = Directory.GetDirectories(rootPath);
-
-                if (directoryNames.Length == 0)
-                    return;
-
-                subDirectories.AddRange(directoryNames);
-
-                foreach (string subDirectory in subDirectories)
+                try
                 {
-                    
-                    WalkTheTree(subDirectory);
+                    string[] directoryNames = Directory.GetDirectories(rootPath);
 
+                    if (directoryNames.Length == 0)
+                        return;
+
+                    subDirectories.AddRange(directoryNames);
+
+                    foreach (string subDirectory in subDirectories)
+                    {
+
+                        WalkTheTree(subDirectory);
+
+                    }
+                }
+                catch (UnauthorizedAccessException uaccex)
+                {
+                    //gulp the unauthorized exception
+                    uaccex = null;
                 }
             }
             return;
@@ -82,8 +92,21 @@ namespace Taurus.FindFiles
         public void EnumerateFiles(string fullyQualifiedDirectoryName)
         {
 
-            _fileObjects.AddRange(Directory.GetFiles(fullyQualifiedDirectoryName));
+            try
+            {
+                _fileObjects.AddRange(Directory.GetFiles(fullyQualifiedDirectoryName));
+            }
+            catch (IOException iex)
+            {
+                throw iex;
+            }
+            catch (UnauthorizedAccessException uaccex)
+            {
+                //just gulp unauthorized access exceptions. This is because you may encounter them frequently
+                //and there is no need to log such exceptions.
 
+                uaccex = null;
+            }
         }
 
         #endregion
@@ -93,6 +116,7 @@ namespace Taurus.FindFiles
 
         private bool _searchSubDirectories = false;
 
+        
 
         #endregion
     }

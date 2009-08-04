@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRunConfiguration name="Local Test Run" id="c9f924f8-4c83-4888-9779-a2d8850b09eb" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2006">
+  <Description>This is a default test run configuration for a local test run.</Description>
+  <Deployment>
+    <DeploymentItem filename="C:\Projects\codeplex\FindFilesUtil\Trunk\binaries\" />
+  </Deployment>
+  <TestTypeSpecific />
+</TestRunConfiguration>

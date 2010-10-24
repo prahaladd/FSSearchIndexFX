@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMPAlgorithm", "KMPAlgorithm.csproj", "{FD3974D8-E25E-4F33-9CB2-86096E889B41}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A21B022-6D3A-4B28-9DEC-9D6ACCD731BB} = {2A21B022-6D3A-4B28-9DEC-9D6ACCD731BB}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocReaders", "DocReaders\DocReaders\DocReaders.csproj", "{2A21B022-6D3A-4B28-9DEC-9D6ACCD731BB}"
 EndProject

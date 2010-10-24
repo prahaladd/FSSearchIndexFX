@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*FileSearchEngine.cs - This class acts as a driver to start the keyword based search.
+ *
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
@@ -7,6 +11,8 @@ using System.Collections.Generic;
 
 using Taurus.FindFiles.IndexInfra;
 using System.Collections;
+using Taurus.FindFiles.Utils;
+using Taurus.FindFiles.FileFilter;
 
 namespace Taurus.FindFiles.Engines
 {
@@ -29,14 +35,14 @@ namespace Taurus.FindFiles.Engines
 
         #region Public methods
 
-        public Dictionary<string, List<int>> SearchFilesForPattern(string pattern,bool useIndex)
+        public Dictionary<string, List<int>> SearchFilesForPattern(string pattern,bool useIndex,bool searchSubDirectories)
         {
             
             if (!useIndex)
             {
                 _fileContentFinder = new FileContentFinder(_rootPath, pattern);
 
-                _fileContentFinder.SearchInFiles();
+                _fileContentFinder.SearchInFiles(searchSubDirectories,_fileFilter);
 
                 //could have used LINQ but my editor does not allow the syntax to be validated :(
                 Dictionary<string, List<int>> fileNamesToOccurencePositions = (from fileEntry in _fileContentFinder.FileNameToOccurencePositions
@@ -52,17 +58,32 @@ namespace Taurus.FindFiles.Engines
             }
             else
             {
-                return SearchFilesUsingIndex(pattern);
+                return SearchFilesUsingIndex(pattern,searchSubDirectories);
             }
         }
 
+
+        
       
         #endregion
 
 
+        #region Public properties
+
+        /// <summary>
+        /// Specify the File attribute filters if any that need to be applied during search.
+        /// </summary>
+        public FileMetaAttributeFilter FileFilter
+        {
+            get { return _fileFilter; }
+            set { _fileFilter = value; }
+        }
+
+        #endregion
+
         #region Private methods
 
-        public Dictionary<string,List<int>> SearchFilesUsingIndex(string pattern)
+        private Dictionary<string,List<int>> SearchFilesUsingIndex(string pattern, bool searchSubDirectories)
         {
 
             Dictionary<string, List<int>> fileNamesToOccurencePostions = new Dictionary<string, List<int>>();
@@ -77,7 +98,12 @@ namespace Taurus.FindFiles.Engines
 
                 foreach (IndexRecord record in indexRecords)
                 {
-                    if( 0 == record.FileName.IndexOf(_rootPath))
+                    bool isFileInSpecifiedSearchPath = Utilities.IsFileInSpecifiedSearchPath(_rootPath,record.FileName,searchSubDirectories);
+                    bool isFileMatchingFilterCriteria = true;
+                    if (null != _fileFilter)
+                        isFileMatchingFilterCriteria = Utilities.EvaluateMetaAttributeFilters(record.FileAttributes, _fileFilter);
+
+                    if(isFileMatchingFilterCriteria && isFileInSpecifiedSearchPath)
                         fileNamesToOccurencePostions.Add(record.FileName, record.OccurencePositions);
                 }
 
@@ -120,7 +146,7 @@ namespace Taurus.FindFiles.Engines
 
         private IndexDatabase _indexDatabase;
 
-        
+        private FileMetaAttributeFilter _fileFilter;
 
         #endregion
 

@@ -1,3 +1,8 @@
+/*KMPEngine.cs - The core engine that performs keyword based search. Implements the Knuth Morris Pratt algorithm
+ * to perform keyword based search.
+*/
+
+
 using System;
 using System.Collections.Generic;
 using System.Text;

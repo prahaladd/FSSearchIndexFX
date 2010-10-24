@@ -1,9 +1,18 @@
-﻿using System;
+﻿/*Utilities.cs - Common utility classes
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Security.AccessControl;
+
 using Taurus.DocReaders;
 using Taurus.DocReaders.Interfaces;
+using Taurus.FindFiles.IndexInfra;
+using Taurus.FindFiles.FileFilter;
+
 
 namespace Taurus.FindFiles.Utils
 {
@@ -21,8 +30,38 @@ namespace Taurus.FindFiles.Utils
             _fileExtensionsToExclude.Add("bin");
             _fileExtensionsToExclude.Add("class");
             _fileExtensionsToExclude.Add("jar");
+            
+
+        }
 
 
+        public static FileMetaAttributes GetFileMetaAttributes(string fileName)
+        {
+            long fileCreationDate = File.GetCreationTime(fileName).Ticks;
+            long fileModificationDate = File.GetLastAccessTime(fileName).Ticks;
+
+            FileInfo fileInfo = new FileInfo(fileName);
+
+            long fileSize = fileInfo.Length;
+
+            string fileExtension = fileInfo.Extension;
+
+            
+
+            //obtain the owner of the file.
+            FileSecurity fileSecurity = File.GetAccessControl(fileName);
+            Type securityPrincipalType = Type.GetType("System.Security.Principal.SecurityIdentifier");
+
+
+
+            string fileOwner = fileSecurity.GetOwner(securityPrincipalType).Value;
+
+            //create the file meta attributes
+            FileMetaAttributes metaAttributes = new FileMetaAttributes(GetParentDirectoryForFile(fileName),
+                                                                            fileCreationDate, fileModificationDate,fileSize,fileExtension,
+                                                                            fileOwner);
+
+            return metaAttributes;
         }
 
         public static string ReadTextFromFiles(string fileName)
@@ -57,20 +96,35 @@ namespace Taurus.FindFiles.Utils
 
         public static bool IsTextFile(string fileName)
         {
-            //if (fileName.LastIndexOf(".dll", StringComparison.OrdinalIgnoreCase) != -1 ||
-            //    fileName.LastIndexOf(".exe", StringComparison.OrdinalIgnoreCase) != -1 ||
-            //    fileName.LastIndexOf(".sys", StringComparison.OrdinalIgnoreCase) != -1||
-            //    fileName.LastIndexOf(".dat", StringComparison.OrdinalIgnoreCase) != -1 ||
-            //    fileName.LastIndexOf(".com", StringComparison.OrdinalIgnoreCase) != -1 ||
-            //    fileName.LastIndexOf(".") == -1)
-            //    return false;
 
-            //return true;
 
             string fileExtension = fileName.Substring(fileName.LastIndexOf(".") + 1);
 
             return (!IsExtensionExcluded(fileExtension));
            
+        }
+
+        public static bool IsFileInSpecifiedSearchPath(string searchRootPath, string fileName, bool searchSubDirectories)
+        {
+            if (0 != fileName.IndexOf(searchRootPath))
+                return false;
+
+            string parentDirectoryNameForFile = fileName.Substring(0,fileName.LastIndexOf(Path.DirectorySeparatorChar));
+
+            if (!searchSubDirectories)
+            {
+                return (0 == string.Compare(searchRootPath, parentDirectoryNameForFile));
+            }
+
+            return true;
+        }
+
+        public static bool EvaluateMetaAttributeFilters(FileMetaAttributes fileAttributes, FileMetaAttributeFilter filter)
+        {
+            FileFilterEvaluator filterEvaluator = new FileFilterEvaluator(filter,fileAttributes);
+            return filterEvaluator.EvaluateFilter();
+
+
         }
 
         //this function ensures that each word in the file is counted EXACTLY once. Hence 
@@ -111,6 +165,12 @@ namespace Taurus.FindFiles.Utils
                                                     { return ( 0 == string.Compare(extension, inputExtension, 
                                                         StringComparison.OrdinalIgnoreCase)); })) ? true : false;
             return shouldExclude;
+        }
+
+
+        private static string GetParentDirectoryForFile(string fileName)
+        {
+            return fileName.Substring(0,fileName.LastIndexOf(Path.DirectorySeparatorChar));
         }
 
         #region Private static members

@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*IndexingEngine.cs - This class acts as the facade for clients to invoke the functionalities provided by the indexing 
+ *framework.This class performs the task of indexing the extracted words from a file.It internally uses the core search
+ *algorithm to indentify all occurences of a particular word in the text file.
+ *TODO: Needs more fool proof logic to indetify noise words( 'a', 'of','the' etc)
+*/
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Taurus.FindFiles.Utils;
@@ -17,7 +22,9 @@ namespace Taurus.FindFiles.Engines
 
         #region Public methods
 
-        
+        /// <summary>
+        /// Indexes all the logical volumes on the desktop.
+        /// </summary>
         public void Index()
         { 
            //get the number of logical drives on the system.
@@ -29,27 +36,18 @@ namespace Taurus.FindFiles.Engines
             //are operating system specific binary files and wont be of much value in the 
             //content search.
 
-            foreach (string logicalDrive in logicalDrives)
-            {
-
-                _directoryTreeWalker = new DirectoryTreeWalker();
-                
-                _directoryTreeWalker.SearchSubDirectories = true;
-
-                _directoryTreeWalker.WalkTheTree(logicalDrive);
-
-                List<string> files = _directoryTreeWalker.Files;
-
-                IndexInternal(files);
-
-
-
-            }
-            _indexDatabase = new IndexDatabase(_indexDatabaseEntries, DateTime.UtcNow);
-            //persist the entire database to the disk
-            IndexDatabaseWriter idbWriter = new IndexDatabaseWriter();
-            idbWriter.Persist(_indexDatabase);
+            FetchFilesAndIndex(logicalDrives);
         }
+
+        /// <summary>
+        /// Indexes directories specified in the "filePaths" parameter
+        /// </summary>
+        /// <param name="filePaths">The list of directories that need to be indexed</param>
+        public void Index(List<string> filePaths)
+        {
+            FetchFilesAndIndex(filePaths.ToArray());
+        }
+        
 
         #endregion
 
@@ -149,8 +147,30 @@ namespace Taurus.FindFiles.Engines
                 LogWriter.Dispose();
             }
         }
-        
-        
+
+        private void FetchFilesAndIndex(string[] filePathsToIndex)
+        {
+            foreach (string filePath in filePathsToIndex)
+            {
+
+                _directoryTreeWalker = new DirectoryTreeWalker();
+
+                _directoryTreeWalker.SearchSubDirectories = true;
+
+                _directoryTreeWalker.WalkTheTree(filePath);
+
+                List<string> files = _directoryTreeWalker.Files;
+
+                IndexInternal(files);
+
+
+
+            }
+            _indexDatabase = new IndexDatabase(_indexDatabaseEntries, DateTime.UtcNow);
+            //persist the entire database to the disk
+            IndexDatabaseWriter idbWriter = new IndexDatabaseWriter();
+            idbWriter.Persist(_indexDatabase);
+        }
         
 
         #endregion

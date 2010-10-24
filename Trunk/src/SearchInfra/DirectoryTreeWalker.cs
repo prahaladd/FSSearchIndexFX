@@ -1,9 +1,16 @@
+/*DirectoryTreeWalker.cs - This class walks the directory structure. It uses a combinaton of BFS and DFS to explore the tree
+ *
+ *
+*/
+
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using Taurus.FindFiles.Utils;
 
 namespace Taurus.FindFiles
 {
@@ -18,7 +25,8 @@ namespace Taurus.FindFiles
         }
 
         /// <summary>
-        /// This method walks the directory tree in the depth first fashion.
+        /// This method walks the directory tree in the depth first fashion.Throws IOException if an error
+        /// is encountered while walking the directory tree.
         /// </summary>
         public void WalkTheTree(string rootPath)
         {
@@ -58,7 +66,8 @@ namespace Taurus.FindFiles
                 }
                 catch (UnauthorizedAccessException uaccex)
                 {
-                    //gulp the unauthorized exception
+                    //Log the unauthorized exception and then clear it off
+
                     uaccex = null;
                 }
             }
@@ -110,13 +119,13 @@ namespace Taurus.FindFiles
         }
 
         #endregion
+
+       
         #region Private members
 
         private List<string> _fileObjects = new List<string>();
 
         private bool _searchSubDirectories = false;
-
-        
 
         #endregion
     }

@@ -1,13 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
+/*FileContentFinder.cs - This class contains routines that will be used to extract search keywords from files on the disk
+ *and obtain the file name and the occurence position for the search keyword.This class hides the internal details of
+ *invoking the core text search algorithm from the File search engine class.It also maintains a record of the occurences
+ *of the keyword in a particular file i.e. the file name and the number of times the keyword appears in the file
+*/
+
+
+
 using System.IO;
 using Taurus.FindFiles.Utils;
+using Taurus.FindFiles.FileFilter;
+using Taurus.FindFiles.IndexInfra;
 
 
 namespace Taurus.FindFiles
 {
-    public class FileContentFinder
+    internal class FileContentFinder
     {
 
         //TODO: this constructor may have to be deprecated going further.
@@ -25,10 +36,10 @@ namespace Taurus.FindFiles
 
         }
 
-        public void  SearchInFiles()
+        public void  SearchInFiles(bool searchSubDirectories, FileMetaAttributeFilter fileFilter)
         {
             DirectoryTreeWalker directoryTreeWalker = new DirectoryTreeWalker();
-            directoryTreeWalker.SearchSubDirectories = true;
+            directoryTreeWalker.SearchSubDirectories = searchSubDirectories;
             directoryTreeWalker.WalkTheTree(SearchRootPath);
 
             //ok now the tree has been walked. Get the list of all the text files and then determine the presence of the strings
@@ -39,6 +50,12 @@ namespace Taurus.FindFiles
             {
                 if (!Utilities.IsTextFile(file))
                     continue;
+
+                FileMetaAttributes fileAttributes = Utilities.GetFileMetaAttributes(file);
+
+                if (null != fileFilter && !Utilities.EvaluateMetaAttributeFilters(fileAttributes, fileFilter))
+                    continue;
+
 
                 fileContent = Utilities.ReadTextFromFiles(file);
 

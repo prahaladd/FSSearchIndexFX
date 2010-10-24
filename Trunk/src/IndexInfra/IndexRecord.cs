@@ -22,6 +22,14 @@ namespace Taurus.FindFiles.IndexInfra
         {
             _fileName = fileName;
             _occurencePositions = occurencePositions;
+            _fileMetaAttributes = null;
+        }
+
+        public IndexRecord(string fileName, List<Int32> occurencePositions, FileMetaAttributes fileMetaAttributes)
+        {
+            _fileName = fileName;
+            _occurencePositions = occurencePositions;
+            _fileMetaAttributes = fileMetaAttributes;
         }
 
         #endregion
@@ -38,6 +46,11 @@ namespace Taurus.FindFiles.IndexInfra
             get { return _occurencePositions; }
         }
 
+        public FileMetaAttributes FileAttributes
+        {
+            get { return _fileMetaAttributes; }
+        }
+
         #endregion
 
 
@@ -50,6 +63,11 @@ namespace Taurus.FindFiles.IndexInfra
 
         private List<Int32> _occurencePositions = new List<Int32>();
 
+        private FileMetaAttributes _fileMetaAttributes;
+
         #endregion
+
+
+     
     }
 }

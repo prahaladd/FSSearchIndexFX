@@ -5,3 +5,8 @@ C:\Projects\codeplex\FindFilesUtil\Trunk\src\obj\Debug\Taurus.FindFiles.dll
 C:\Projects\codeplex\FindFilesUtil\Trunk\src\obj\Debug\Taurus.FindFiles.pdb
 C:\Projects\codeplex\FindFilesUtil\Trunk\binaries\Taurus.FindFiles.dll
 C:\Projects\codeplex\FindFilesUtil\Trunk\binaries\Taurus.FindFiles.pdb
+C:\Projects\Classifier\findfilesutil\Trunk\src\obj\Debug\ResolveAssemblyReference.cache
+C:\Projects\Classifier\findfilesutil\Trunk\src\obj\Debug\Taurus.FindFiles.pdb
+C:\Projects\Classifier\findfilesutil\Trunk\binaries\Taurus.FindFiles.dll
+C:\Projects\Classifier\findfilesutil\Trunk\binaries\Taurus.FindFiles.pdb
+C:\Projects\Classifier\findfilesutil\Trunk\src\obj\Debug\Taurus.FindFiles.dll

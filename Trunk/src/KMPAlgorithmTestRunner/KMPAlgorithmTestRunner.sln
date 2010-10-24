@@ -12,12 +12,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		KMPAlgorithmTestRunner4.vsmdi = KMPAlgorithmTestRunner4.vsmdi
 		KMPAlgorithmTestRunner5.vsmdi = KMPAlgorithmTestRunner5.vsmdi
 		KMPAlgorithmTestRunner6.vsmdi = KMPAlgorithmTestRunner6.vsmdi
+		KMPAlgorithmTestRunner7.vsmdi = KMPAlgorithmTestRunner7.vsmdi
+		KMPAlgorithmTestRunner8.vsmdi = KMPAlgorithmTestRunner8.vsmdi
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = KMPAlgorithmTestRunner6.vsmdi
+		CategoryFile = KMPAlgorithmTestRunner8.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

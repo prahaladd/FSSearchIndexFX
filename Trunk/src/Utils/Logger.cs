@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*Logger.cs - Exposes logging functionalities that can be used by the search and indexing framework.
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -25,14 +29,13 @@ namespace Taurus.FindFiles.Utils
             try
             {
                 
-
                 LogFileWriter.WriteLine(message);
                 LogFileWriter.Flush();
             }
             catch (Exception ex)
             {
                 //gulp the exception as no logging exception should halt processing
-
+                
             }
 
         }
